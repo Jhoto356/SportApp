@@ -1,40 +1,76 @@
 package com.jhoto_castro.sport_app
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.jhoto_castro.sport_app.ui.theme.Sport_appTheme
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.content.ContextCompat
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Sport_appTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
-            }
+            ConstraintMain()
         }
     }
 }
 
+@Preview(showSystemUi = true)
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun ConstraintMain() {
+    ConstraintLayout(
+        modifier = Modifier
+            .background(color = colorResource(id = R.color.color_primary_dark))
+            .fillMaxSize()
+    ) {
+        val (cardByFields, textVersion) = createRefs()
+        Card(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(vertical = 88.dp, horizontal = 32.dp)
+            .background(color = Color(R.color.bg_light))
+            .constrainAs(cardByFields) {
+                top.linkTo(parent.top)
+                bottom.linkTo(textVersion.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }) {
+
+        }
+        Text(
+            text = stringResource(id = R.string.version_app),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .constrainAs(textVersion) {
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(cardByFields.start)
+                    end.linkTo(cardByFields.end)
+                }, style = TextStyle(
+                color = colorResource(id = R.color.white),
+                textAlign = TextAlign.Center
+            )
+        )
+    }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    Sport_appTheme {
-        Greeting("Android")
-    }
+fun ContentCard() {
+
 }
