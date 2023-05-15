@@ -1,9 +1,11 @@
 package com.jhoto_castro.sport_app
 
 import android.content.Context
+import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.gestures.scrollable
@@ -39,7 +41,8 @@ fun ConstraintMain() {
             .background(color = colorResource(id = R.color.color_primary_dark))
             .fillMaxSize()
     ) {
-        val (cardByFields, textVersion) = createRefs()
+        val (cardByFields, textVersion, imageLogin) = createRefs()
+//       Image(painter = , contentDescription = , modifier = Modifier.constrainAs(imageLogin))
         Card(modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
