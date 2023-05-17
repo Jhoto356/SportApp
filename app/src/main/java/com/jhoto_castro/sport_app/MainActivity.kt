@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -42,19 +43,24 @@ fun ConstraintMain() {
             .fillMaxSize()
     ) {
         val (cardByFields, textVersion, imageLogin) = createRefs()
-//       Image(painter = , contentDescription = , modifier = Modifier.constrainAs(imageLogin))
+        Image(painter = painterResource(id = R.drawable.ic_logo_app),
+            contentDescription = "",
+            modifier = Modifier.padding(24.dp).constrainAs(imageLogin) {
+            top.linkTo(parent.top)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            bottom.linkTo(cardByFields.top)
+        })
         Card(modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(vertical = 88.dp, horizontal = 32.dp)
+            .fillMaxHeight(0.7F)
+            .padding(vertical = 8.dp, horizontal = 32.dp)
             .background(color = Color(R.color.bg_light))
             .constrainAs(cardByFields) {
-                top.linkTo(parent.top)
                 bottom.linkTo(textVersion.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }) {
-
         }
         Text(
             text = stringResource(id = R.string.version_app),
