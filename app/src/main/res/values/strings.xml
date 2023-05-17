@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">sport_app</string>
     <string name="version_app">1.0.0.0</string>
+    <string name="label_text_user_name">Nombre de usuario</string>
 </resources>
