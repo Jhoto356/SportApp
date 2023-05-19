@@ -13,4 +13,5 @@
     <color name="color_primary_light">#AFD3E2</color>
     <color name="color_primary_medium">#19A7CE</color>
     <color name="color_primary_dark">#146C94</color>
+    <color name="color_transparent">#0FFF</color>
 </resources>

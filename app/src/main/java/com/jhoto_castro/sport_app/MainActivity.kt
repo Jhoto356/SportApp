@@ -8,9 +8,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
+import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldColors
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,12 +21,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +39,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            window.statusBarColor = colorResource(id = R.color.color_primary_dark).toArgb()
+            window.navigationBarColor = colorResource(id = R.color.color_primary_dark).toArgb()
             ConstraintMain()
         }
     }
@@ -85,9 +93,15 @@ fun ConstraintMain() {
         )
     }
 }
+
 @Composable
 fun SetLabelIniTextField(textToShow: String) {
     Text(text = textToShow)
+}
+
+@Composable
+fun IconTogglePassword() {
+
 }
 
 @Composable
@@ -98,23 +112,50 @@ fun ContentCard() {
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        val (txtFieldUserName, textFieldPassword, btnLogIn) = createRefs()
+        val (txtFieldUserName, txtFieldPassword, btnLogIn) = createRefs()
         var userName by remember { mutableStateOf(TextFieldValue()) }
+        var userPassword by remember { mutableStateOf(TextFieldValue()) }
         OutlinedTextField(
-            TextFieldValue
             value = userName,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.color_primary_dark),
+                focusedLabelColor = colorResource(id = R.color.color_primary_dark),
+                cursorColor = colorResource(id = R.color.color_primary_dark)
+            ),
             onValueChange = { userName = it },
-            label = SetLabelIniTextField(textToShow = stringResource(id = R.string.label_text_user_name)),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
             maxLines = 1,
-            selectionColor = colorResource(id = R.color.color_primary_dark),
             singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            label = { SetLabelIniTextField(textToShow = stringResource(id = R.string.label_text_user_name)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(txtFieldUserName) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
+                    bottom.linkTo(txtFieldPassword.top)
+                }
+        )
+        Box(modifier = Modifier.fillMaxWidth().height(8.dp))
+        OutlinedTextField(
+            value = userPassword,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = colorResource(id = R.color.color_primary_dark),
+                focusedLabelColor = colorResource(id = R.color.color_primary_dark),
+                cursorColor = colorResource(id = R.color.color_primary_dark)
+            ),
+            trailingIcon = { IconTogglePassword() },
+            onValueChange = { userPassword = it },
+            maxLines = 1,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            label = { SetLabelIniTextField(textToShow = stringResource(id = R.string.label_text_user_password)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(txtFieldPassword) {
+                    top.linkTo(txtFieldUserName.bottom)
+                    start.linkTo(txtFieldUserName.start)
+                    end.linkTo(txtFieldUserName.end)
                 }
         )
     }
