@@ -5,14 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,13 +27,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -95,13 +101,8 @@ fun ConstraintMain() {
 }
 
 @Composable
-fun SetLabelIniTextField(textToShow: String) {
+fun SetLabelToShow(textToShow: String) {
     Text(text = textToShow)
-}
-
-@Composable
-fun IconTogglePassword() {
-
 }
 
 @Composable
@@ -112,9 +113,8 @@ fun ContentCard() {
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        val (txtFieldUserName, txtFieldPassword, btnLogIn) = createRefs()
+        val (txtFieldUserName, txtFieldPassword, btnLogIn, spacerOne, spacerTwo, spacerThree, txtRecoverPassword) = createRefs()
         var userName by remember { mutableStateOf(TextFieldValue()) }
-        var userPassword by remember { mutableStateOf(TextFieldValue()) }
         OutlinedTextField(
             value = userName,
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -126,7 +126,7 @@ fun ContentCard() {
             maxLines = 1,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-            label = { SetLabelIniTextField(textToShow = stringResource(id = R.string.label_text_user_name)) },
+            label = { SetLabelToShow(textToShow = stringResource(id = R.string.label_text_user_name)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(txtFieldUserName) {
@@ -136,7 +136,18 @@ fun ContentCard() {
                     bottom.linkTo(txtFieldPassword.top)
                 }
         )
-        Box(modifier = Modifier.fillMaxWidth().height(8.dp))
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(8.dp)
+            .constrainAs(spacerOne) {
+                top.linkTo(txtFieldUserName.bottom)
+                start.linkTo(txtFieldUserName.start)
+                end.linkTo(txtFieldUserName.end)
+                bottom.linkTo(txtFieldPassword.top)
+            }
+        )
+        var userPassword by remember { mutableStateOf(TextFieldValue()) }
+        var passwordVisibility: Boolean by remember { mutableStateOf(false) }
         OutlinedTextField(
             value = userPassword,
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -144,19 +155,62 @@ fun ContentCard() {
                 focusedLabelColor = colorResource(id = R.color.color_primary_dark),
                 cursorColor = colorResource(id = R.color.color_primary_dark)
             ),
-            trailingIcon = { IconTogglePassword() },
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        passwordVisibility = !passwordVisibility
+                    }) {
+                    val iconToShow = if (!passwordVisibility) {
+                        painterResource(id = R.drawable.ic_show_password)
+                    } else {
+                        painterResource(id = R.drawable.ic_hide_password)
+                    }
+                    Icon(
+                        painter = iconToShow,
+                        contentDescription = ""
+                    )
+                }
+            },
             onValueChange = { userPassword = it },
             maxLines = 1,
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            label = { SetLabelIniTextField(textToShow = stringResource(id = R.string.label_text_user_password)) },
+            label = { SetLabelToShow(textToShow = stringResource(id = R.string.label_text_user_password)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .constrainAs(txtFieldPassword) {
-                    top.linkTo(txtFieldUserName.bottom)
+                    top.linkTo(spacerOne.bottom)
                     start.linkTo(txtFieldUserName.start)
                     end.linkTo(txtFieldUserName.end)
                 }
         )
+        Spacer(modifier = Modifier
+            .fillMaxWidth()
+            .height(8.dp)
+            .constrainAs(spacerTwo) {
+                top.linkTo(txtFieldPassword.bottom)
+                start.linkTo(txtFieldPassword.start)
+                end.linkTo(txtFieldPassword.end)
+                bottom.linkTo(btnLogIn.top)
+            }
+        )
+        Button(
+            modifier = Modifier
+                .constrainAs(btnLogIn) {
+                    top.linkTo(spacerTwo.bottom)
+                    start.linkTo(txtFieldPassword.start)
+                    end.linkTo(txtFieldPassword.end)
+                },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colorResource(id = R.color.color_primary_dark),
+            ),
+            onClick = { /*TODO*/ }) {
+            Text(
+                text = stringResource(id = R.string.label_btn_log_in),
+                color = colorResource(id = R.color.white)
+            )
+        }
+
     }
 }
